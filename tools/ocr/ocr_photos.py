@@ -9,7 +9,7 @@ import PIL.ExifTags
 from glob import glob
 
 easyocr_reader = easyocr.Reader(['pt', 'en'])
-reprocess_existing = True
+reprocess_existing = False
 
 def dms_to_dec(dms):
     return float(dms[0])+float(dms[1])/60+float(dms[2])/3600
@@ -27,7 +27,7 @@ def get_lat_long(img):
 
 def ocr(file_og):
     file = path.split(file_og)[1]
-    panoid = file.split('=')[0]
+    # panoid = file.split('=')[0]
     # source = 'google' if len(panoid) <= 23 else 'user'
 
     img = Image.open(file_og)
@@ -40,6 +40,7 @@ def ocr(file_og):
     }
     lat = (-1 if exif['GPSInfo'][1] == 'S' else 1) * dms_to_dec(exif['GPSInfo'][2])
     long = (-1 if exif['GPSInfo'][3] == 'W' else 1) * dms_to_dec(exif['GPSInfo'][4])
+    datetime = exif['DateTime']
 
     try: 
         easyocr_res = easyocr_reader.readtext(np.array(img),
@@ -50,27 +51,34 @@ def ocr(file_og):
         easyocr_res = ''
 
     return {
+        # 'id': '',
+        # 'macroid': '',
+        # 'submacroid': '',
+        'daterecorded': datetime,
+        'originalfilepath': file,
         'panoid': '',
         'lat': lat,
         'long': long,
-        'source': 'photo',
-        'file': file,
-        'ocr': easyocr_res
+        'origin': 'photo',
+        'name': '',
+        'ocr': easyocr_res,
+        'description': ' '.join(easyocr_res),
     }
 
 
-paths = glob(path.join('photos', '*'))
+base_path = path.join('.', '.')
+paths = glob(path.join(base_path, 'images_raw', 'photos', '*'))
 paths = [path for path in paths if path[-4] == '.']
 
 old_data = []
 if not reprocess_existing:
-    with open(path.join('data', 'database_photos.json'), 'r') as f:
+    with open(path.join(base_path, 'data', 'database_photos.json'), 'r') as f:
         old_data = json.load(f)
     new_paths = []
-    old_panoids = [d['panoid'] for d in old_data]
+    old_filepaths = [d['originalfilepath'] for d in old_data]
     for p in paths:
-        panoid = path.split(p)[1].split('=')[0]
-        if panoid not in old_panoids:
+        # panoid = path.split(p)[1].split('=')[0]
+        if p.split('/')[-1] not in old_filepaths:
             new_paths.append(p)
 
     paths = new_paths
@@ -79,13 +87,13 @@ random.shuffle(paths)
 
 start = time.time()
 data = []
-# batch = 800
-# for i, p in enumerate(paths[:batch]):
-#     print(f'ocr {i+1}/{len(paths[:batch])}')
-#     data.append(ocr(p))
-for i, p in enumerate(paths):
-    print(f'ocr {i+1}/{len(paths)}')
+batch = 300
+for i, p in enumerate(paths[:batch]):
+    print(f'ocr {i+1}/{len(paths[:batch])}')
     data.append(ocr(p))
+# for i, p in enumerate(paths):
+#     print(f'ocr {i+1}/{len(paths)}')
+#     data.append(ocr(p))
 stop = time.time()
 
 new_data = [*old_data, *data]
@@ -94,5 +102,5 @@ print(f'performed ocr in {len(data)} files')
 print(f'run time: {stop - start:.0f}s')
 print(f'time per file: {(stop - start)/len(paths):.2f}s')
 
-with open(path.join('data', 'database_photos.json'), 'w') as f:
+with open(path.join(base_path, 'data', 'database_photos.json'), 'w') as f:
     json.dump(new_data, f)
