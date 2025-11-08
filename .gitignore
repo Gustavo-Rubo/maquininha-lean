@@ -1,0 +1,11 @@
+__pycache__/
+.backup/
+.tests/
+env/
+*.env
+*.pyc
+*/env/
+images_raw/
+webapp/migrations/
+webapp/images/
+webapp/thumbs/

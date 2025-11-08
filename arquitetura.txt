@@ -1,0 +1,118 @@
+maquininha stack e arquitetura
+
+python3.10
+postgresql
+flask
+sqlalchemy
+
+
+pastas
+- imagens
+- thumbs
+
+cada imagem tem um ID, mas cada micro pode ter mais de uma imagem
+quando uma imagem é upada, o ocr lê a imagem e coloca o texto em ocr
+na interface de edição tem um botão "copiar ocr para manual"
+
+:macro
+id
+nome
+wkt
+
+:submacro
+id
+macroid
+nome
+wkt
+
+:imagem
+id
+macroid
+submacroid
+closestmacroid
+dateadded
+datemodified
+originalfilepath
+panoid
+lat
+long
+nome
+keywords
+description
+origin [panorama-streetview, panorama-user, photo]
+ocr
+objectrecognition
+
+
+macros
+travessas
+avenidas de reitores + matão + lago
+poli
+	mamemi
+	mec
+	hidraulica
+	tpn
+	civil
+	adm
+	estacionamento
+	biênio
+	elétrica
+	prod
+FEA
+	FEA
+	estacionamento
+	vivência
+IRI
+sweden
+barracões
+	núcleo de artes afrobrasileiras
+	CEDIR
+	serviço técnico de redes elétricas
+	associação dos servidores da poli
+	genoma
+IP
+	bloco d cesar hades
+	bloco b anitta castilho
+	bloco a
+	bloco ? CEIP 
+	bloco k aciesp
+	estacionamento
+	passarela
+ECA
+	CTR
+	CMU
+	CJE
+	CAP
+	CAC
+	CCA
+	CBD
+	CRP
+	EAD
+	biblioteca, adm
+	prainha (canil?)
+	teatro laboratório
+	praça das artes
+bancos
+	banco do brasil
+	banco do brasil fechado
+	santander select
+	itaú
+praça do relógio
+    Mata Atlântica
+    Mata de Araucária
+    Campos rupestres
+    Mata caducifólia
+    Restinga
+    Cerrado
+
+
+https://stackabuse.com/using-sqlalchemy-with-flask-and-postgresql/
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-20-04-pt#acessando-um-prompt-do-postgres-sem-mudar-de-contas
+setup servidor
+criar venv
+instalar dependencias
+criar base de dados "maquininha" no pgadmin
+
+
+aorus:
+createdb maquininha-db
