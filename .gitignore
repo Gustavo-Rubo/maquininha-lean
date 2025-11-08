@@ -1,0 +1,10 @@
+__pycache__/
+.backup/
+.tests/
+assets/
+env/
+photos/
+*.env
+*.pyc
+webapp/migrations/
+*/env/
